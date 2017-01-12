@@ -459,7 +459,7 @@ int ProgAlgSPIFlash::spi_flashinfo_m25p_mx25l(unsigned char *buf, int is_mx25l)
                 fbuf[1], fbuf[2]);
         switch (fbuf[2])
           {
-          case 0x17:
+         case 0x17:
             pages = 32768;
             sector_size = 65536;
             break;
@@ -467,12 +467,33 @@ int ProgAlgSPIFlash::spi_flashinfo_m25p_mx25l(unsigned char *buf, int is_mx25l)
             pages = 65536;
             sector_size = 65536;
             break;
+          case 0x19:
+            pages = 131072;
+            sector_size = 65536;
+            break;
           default:
             fprintf(stderr,"Unexpected N25Q size ID 0x%02x\n", buf[2]);
             return -1;
           }
         break;
-
+      case 0xbb:
+        fprintf(stderr, "Found Micron N25Q Device, Device ID 0x%02x%02x\n",
+                fbuf[1], fbuf[2]);
+        switch (fbuf[2])
+          {
+          case 0x15:
+            pages = 8192;
+            sector_size = 65536;
+            break;
+          case 0x16:
+            pages = 16384;
+            sector_size = 65536;
+            break;
+          default:
+            fprintf(stderr,"Unexpected N25Q size ID 0x%02x\n", buf[2]);
+            return -1;
+          }
+          break;
       default:
         fprintf(stderr,"M25P: Unexpected RDID upper Device ID 0x%02x\n", fbuf[1]);
         return -1;
